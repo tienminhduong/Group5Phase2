@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : Block
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float gridSize = 1f;
     [SerializeField] private float moveCooldown = 0.1f;
-    [SerializeField] private LayerMask obstacleLayer;
 
-    private Vector2 targetPosition;
     private Vector2 input;
-    private bool isMoving = false;
     private float moveCooldownTimer = 0f;
 
     private void Start()
@@ -94,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             foreach (Collider2D col in colliders)
             {
                 Box box = col.GetComponent<Box>();
-                if (box != null && box.CanMove(direction))
+                if (box != null && box.CanMove(direction,gameObject))
                 {
                     box.Move(direction);
                     Move(direction);
@@ -104,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void Move(Vector2 direction)
+    override public void Move(Vector2 direction)
     {
         targetPosition += gridSize * direction;
         isMoving = true;

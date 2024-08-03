@@ -2,21 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour
+public class Box : Block
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float gridSize = 1f;
-    [SerializeField] private LayerMask obstacleLayer;
 
-    public Vector2 targetPosition;
-    private bool isMoving = false;
-
-    private void Start()
+    protected void Start()
     {
         targetPosition = transform.position;
     }
 
-    private void Update()
+    protected void Update()
     {
         if (isMoving)
         {
@@ -24,7 +18,7 @@ public class Box : MonoBehaviour
         }
     }
 
-    public bool CanMove(Vector2 direction)
+    virtual public bool CanMove(Vector2 direction, GameObject pusher)
     {
         Vector2 potentialPosition = targetPosition + gridSize * direction;
         float checkSize = gridSize * 0.45f;
@@ -32,6 +26,7 @@ public class Box : MonoBehaviour
         // Check if the box can move to the potential position
         if (!Physics2D.OverlapBox(potentialPosition, new Vector2(checkSize, checkSize), 0, obstacleLayer))
         {
+            Debug.Log("Nothing");
             return true;
         }
         else
@@ -41,16 +36,18 @@ public class Box : MonoBehaviour
             foreach (Collider2D col in colliders)
             {
                 Box box = col.GetComponent<Box>();
-                if (box != null && box.CanMove(direction))
+                if (box != null && box.CanMove(direction, gameObject))
                 {
+                    Debug.Log("movable box");
                     return true;
                 }
             }
         }
+        Debug.Log("wall");
         return false;
     }
 
-    public void Move(Vector2 direction)
+    override public void Move(Vector2 direction)
     {
         Vector2 potentialPosition = targetPosition + gridSize * direction;
         float checkSize = gridSize * 0.45f;
@@ -58,7 +55,7 @@ public class Box : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapBoxAll(potentialPosition, new Vector2(checkSize, checkSize), 0, obstacleLayer);
         foreach (Collider2D col in colliders)
         {
-            Box box = col.GetComponent<Box>();
+            Block box = col.GetComponent<Block>();
             if (box != null)
             {
                 box.Move(direction);
@@ -69,7 +66,7 @@ public class Box : MonoBehaviour
         isMoving = true;
     }
 
-    private void MoveToTarget()
+    protected void MoveToTarget()
     {
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
         if (Vector2.Distance(transform.position, targetPosition) <= 0.01f)
@@ -79,7 +76,7 @@ public class Box : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         float debugSize = gridSize * 0.9f;
         Gizmos.color = Color.red;

@@ -26,7 +26,6 @@ public class Box : Block
         // Check if the box can move to the potential position
         if (!Physics2D.OverlapBox(potentialPosition, new Vector2(checkSize, checkSize), 0, obstacleLayer))
         {
-            Debug.Log("Nothing");
             return true;
         }
         else
@@ -36,15 +35,12 @@ public class Box : Block
             foreach (Collider2D col in colliders)
             {
                 Box box = col.GetComponent<Box>();
-                if (box != null && box.CanMove(direction, gameObject))
+                if (box == null || !box.CanMove(direction, gameObject))
                 {
-                    Debug.Log("movable box");
-                    return true;
+                    return false;
                 }
-            }
+            }return true;
         }
-        Debug.Log("wall");
-        return false;
     }
 
     override public void Move(Vector2 direction)

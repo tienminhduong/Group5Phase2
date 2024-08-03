@@ -14,4 +14,23 @@ public class Block : MonoBehaviour
     {
         
     }
+
+    public Vector2 OppositeDirection(Vector2 direction)
+    {
+        if (direction == Vector2.up)
+        {
+            return Vector2.down;
+        }
+        else if (direction == Vector2.down)
+        {
+            return Vector2.up;
+        }else if (direction == Vector2.left)
+        {
+            return Vector2.right;
+        }else if(direction == Vector2.right)
+        {
+            return Vector2.left;
+        }
+        return Vector2.zero;
+    }
 }

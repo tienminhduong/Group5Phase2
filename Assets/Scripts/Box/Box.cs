@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : Block
+public class Box : Tblock
 {
 
     protected void Start()
@@ -51,7 +51,7 @@ public class Box : Block
         Collider2D[] colliders = Physics2D.OverlapBoxAll(potentialPosition, new Vector2(checkSize, checkSize), 0, obstacleLayer);
         foreach (Collider2D col in colliders)
         {
-            Block box = col.GetComponent<Block>();
+            Tblock box = col.GetComponent<Tblock>();
             if (box != null)
             {
                 box.Move(direction);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerMovement : Block
+public class PlayerMovement : Tblock
 {
     [SerializeField] private float moveCooldown = 0.1f;
 

@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Level : MonoBehaviour
+public class TLevel : MonoBehaviour
 {
     public Box upBox, downBox, leftBox, rightBox, levelBox;
-    public Level parent = null;
+    public TLevel parent = null;
 
     private void Start()
     {}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class Tblock : MonoBehaviour
 {
     [SerializeField] protected float moveSpeed = 5f;
     [SerializeField] protected float gridSize = 1f;

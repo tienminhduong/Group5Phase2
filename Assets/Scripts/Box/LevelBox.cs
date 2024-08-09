@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LevelBox : Box
 {
-    public Level level;
+    public TLevel level;
     bool pushOppositeDirection = false;
     override public bool CanMove(Vector2 direction, GameObject pusher)
     {
@@ -43,25 +43,25 @@ public class LevelBox : Box
                     if (direction == Vector2.down && level.downBox.CanMove(oppositeDirection, null))
                     {
                         col.transform.localPosition = level.downBox.transform.position;
-                        col.GetComponent<Block>().targetPosition = level.downBox.targetPosition;
+                        col.GetComponent<Tblock>().targetPosition = level.downBox.targetPosition;
                         consume = true;
                     }
                     else if (direction == Vector2.up && level.upBox.CanMove(oppositeDirection, null))
                     {
                         col.transform.localPosition = level.upBox.transform.position;
-                        col.GetComponent<Block>().targetPosition = level.upBox.targetPosition;
+                        col.GetComponent<Tblock>().targetPosition = level.upBox.targetPosition;
                         consume = true;
                     }
                     else if (direction == Vector2.left && level.leftBox.CanMove(oppositeDirection, null))
                     {
                         col.transform.position = level.leftBox.transform.position;
-                        col.GetComponent<Block>().targetPosition = level.leftBox.targetPosition;
+                        col.GetComponent<Tblock>().targetPosition = level.leftBox.targetPosition;
                         consume = true;
                     }
                     else if (direction == Vector2.right && level.rightBox.CanMove(oppositeDirection, null))
                     {
                         col.transform.position = level.rightBox.transform.position;
-                        col.GetComponent<Block>().targetPosition = level.rightBox.targetPosition;
+                        col.GetComponent<Tblock>().targetPosition = level.rightBox.targetPosition;
                         consume = true;
                     }
                     if (consume)
@@ -79,20 +79,20 @@ public class LevelBox : Box
         if (direction == Vector2.down && level.upBox.CanMove(direction, null))
         {
             pusher.transform.position = level.upBox.transform.position;
-            pusher.GetComponent<Block>().targetPosition = level.upBox.targetPosition;
+            pusher.GetComponent<Tblock>().targetPosition = level.upBox.targetPosition;
         }else if (direction == Vector2.up && level.downBox.CanMove(direction, null))
         {
             pusher.transform.position = level.downBox.transform.position;
-            pusher.GetComponent<Block>().targetPosition = level.downBox.targetPosition;
+            pusher.GetComponent<Tblock>().targetPosition = level.downBox.targetPosition;
         }else if(direction == Vector2.left && level.rightBox.CanMove(direction, null))
         {
             pusher.transform.position = level.rightBox.transform.position;
-            pusher.GetComponent<Block>().targetPosition = level.rightBox.targetPosition;
+            pusher.GetComponent<Tblock>().targetPosition = level.rightBox.targetPosition;
         }
         else if (direction == Vector2.right && level.leftBox.CanMove(direction, null))
         {
             pusher.transform.position = level.leftBox.transform.position;
-            pusher.GetComponent<Block>().targetPosition = level.leftBox.targetPosition;
+            pusher.GetComponent<Tblock>().targetPosition = level.leftBox.targetPosition;
         }
         return false;
     }
@@ -104,7 +104,7 @@ public class LevelBox : Box
         Collider2D[] colliders = Physics2D.OverlapBoxAll(potentialPosition, new Vector2(checkSize, checkSize), 0, obstacleLayer);
         foreach (Collider2D col in colliders)
         {
-            Block box = col.GetComponent<Block>();
+            Tblock box = col.GetComponent<Tblock>();
             if (box != null)
             {
                 Vector2 dir = direction;

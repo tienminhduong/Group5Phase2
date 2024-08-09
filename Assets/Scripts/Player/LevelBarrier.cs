@@ -9,7 +9,7 @@ public class LevelBarrier : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Block block = collision.GetComponent<Block>();
-        block?.MoveOutBlock(direction);
+        block?.MoveOutLevel(direction);
     }
 
     public Vector3 direction

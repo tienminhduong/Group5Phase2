@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class LevelBlock : Block
 {
-    
+    [SerializeField] Level referenceLevel;
+    public Level ReferenceLevel => referenceLevel;
 }

@@ -7,11 +7,12 @@ TagManager:
   - Wall
   - LevelBarrier
   - RenderBlock
+  - LevelBlock
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Map
   - Water
   - UI
   - 

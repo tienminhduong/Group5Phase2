@@ -11,7 +11,23 @@ public class Block : MonoBehaviour
     public bool MoveTo(Vector3 direction)
     {
         RaycastHit2D check = CheckNextTo(transform.position, direction);
-        return CheckAndMove(check, direction);
+        if (CheckAndMove(check, direction))
+            return true;
+
+
+        RaycastHit2D checkOpposite = CheckNextTo(transform.position, -direction);
+        if (!checkOpposite) return false;
+        LevelBlock oppositeDirectionBlock = checkOpposite.transform.GetComponent<LevelBlock>();
+        if (oppositeDirectionBlock != null) {
+            if (!oppositeDirectionBlock.ReferenceLevel.CanEnterFrom(-direction)) {
+                return false;
+            }
+            else {
+                return MoveInLevel(oppositeDirectionBlock.ReferenceLevel, -direction);
+            }
+        }
+        return false;
+        
     }
 
     bool CheckAndMove(RaycastHit2D raycastHit2D, Vector3 direction)
@@ -59,7 +75,7 @@ public class Block : MonoBehaviour
         return Physics2D.Raycast(position + direction * 0.51f, direction, 0.5f);
     }
 
-    virtual protected void MoveBlock(Vector3 direction)
+    void MoveBlock(Vector3 direction)
     {
         transform.position += direction;
         onMoveBlock?.Invoke(this, direction);
@@ -75,12 +91,12 @@ public class Block : MonoBehaviour
     {
         RaycastHit2D check = CheckNextTo(level.EnterPosition(direction) - direction, direction);
         if (!check) {
-            transform.position = level.EnterPosition(direction);
+            SetBlockInLevel(level, direction);
             return true;
         }
         Block block = check.transform.GetComponent<Block>();
         if (block.MoveTo(direction)) {
-            transform.position = level.EnterPosition(direction);
+            SetBlockInLevel(level, direction);
             return true;
         }
         return false;

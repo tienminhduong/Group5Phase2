@@ -8,7 +8,7 @@ public class Level : MonoBehaviour
     public Block ReferenceBlock => referenceBlock;
 
     [SerializeField] bool enterLeft, enterRight, enterTop, enterBottom;
-    public bool CanEnterFrom(Vector3 direction)
+    virtual public bool CanEnterFrom(Vector3 direction)
     {
         if (direction == Vector3.right) {
             return enterLeft;
@@ -25,7 +25,7 @@ public class Level : MonoBehaviour
         else
             return false;
     }
-    public Vector3 EnterPosition(Vector3 direction)
+    virtual public Vector3 EnterPosition(Vector3 direction)
     {
         return transform.position - direction * 4f;
     }

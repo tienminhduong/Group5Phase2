@@ -19,7 +19,7 @@ public class RenderBlock : MonoBehaviour
     void MoveRenderBlock(Block movingBlock, Vector3 distance)
     {
         if (movingBlock != block) return;
-        transform.localPosition += distance / 9f;
+        transform.localPosition += distance * transform.localScale.x;
     }
 
     public void MoveBackToCamera(Vector3 direction)

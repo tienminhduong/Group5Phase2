@@ -16,7 +16,7 @@ public class Block : MonoBehaviour
 
 
         RaycastHit2D checkOpposite = CheckNextTo(transform.position, -direction);
-        if (!checkOpposite) return false;
+        if (!checkOpposite || !checkOpposite.transform.CompareTag("LevelBlock")) return false;
         LevelBlock oppositeDirectionBlock = checkOpposite.transform.GetComponent<LevelBlock>();
         if (oppositeDirectionBlock != null) {
             if (!oppositeDirectionBlock.ReferenceLevel.CanEnterFrom(-direction)) {
@@ -43,7 +43,8 @@ public class Block : MonoBehaviour
         }
         // If it's out the level, check if it can enter parent level
         else if (raycastHit2D.transform.CompareTag("LevelBarrier")) {
-            RaycastHit2D checkOutLevel = CheckNextTo(level.ReferenceBlock.transform.position, direction);
+            Vector3 outLevelDirection = raycastHit2D.transform.GetComponent<LevelBarrier>().direction;
+            RaycastHit2D checkOutLevel = CheckNextTo(level.ReferenceBlock.transform.position, outLevelDirection);
             return CheckAndMove(checkOutLevel, direction);
         }
         else {

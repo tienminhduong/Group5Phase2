@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public RenderBlock playerInBlock;
+    public LevelBlock playerInBlock;
     private void Update()
     {
-        if (playerInBlock != null) {
-            Vector3 direction = transform.position - playerInBlock.transform.position;
-            direction.z = 0f; playerInBlock.MoveBackToCamera(direction);
-        }
+        //if (playerInBlock != null) {
+            //Vector3 direction = transform.position - playerInBlock.transform.position;
+            //direction.z = 0f; playerInBlock.MoveBackToCamera(direction);
+        //}
     }
 }

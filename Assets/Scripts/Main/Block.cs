@@ -76,28 +76,31 @@ public class Block : MonoBehaviour
         return Physics2D.Raycast(position + direction * 0.51f, direction, 0.5f);
     }
 
-    void MoveBlock(Vector3 direction)
+    virtual protected void MoveBlock(Vector3 direction)
     {
-        transform.position += direction;
+        StartCoroutine(MoveAnimation(direction));
         onMoveBlock?.Invoke(this, direction);
     }
 
     public void MoveOutLevel(Vector3 direction)
     {
+        breakMoving = true;
         transform.position = level.ReferenceBlock.transform.position + direction;
         level = level.ReferenceBlock.level;
+
+        StartCoroutine(ZoomOutAnimation(direction));
     }
 
     public bool MoveInLevel(Level level, Vector3 direction)
     {
         RaycastHit2D check = CheckNextTo(level.EnterPosition(direction) - direction, direction);
         if (!check) {
-            SetBlockInLevel(level, direction);
+            StartCoroutine(ZoomInAnimation(level, direction));
             return true;
         }
         Block block = check.transform.GetComponent<Block>();
         if (block.MoveTo(direction)) {
-            SetBlockInLevel(level, direction);
+            StartCoroutine(ZoomInAnimation(level, direction));
             return true;
         }
         return false;
@@ -107,5 +110,58 @@ public class Block : MonoBehaviour
     {
         transform.position = level.EnterPosition(direction);
         this.level = level;
+    }
+
+    IEnumerator ZoomOutAnimation(Vector3 direction)
+    {
+        Debug.Log("Zoom Animation played");
+
+        Vector3 dScale = Vector3.one / level.Size;
+        Vector3 dDirection = direction / level.Size;
+
+        transform.localScale = Vector3.zero;
+        transform.position -= direction;
+
+        while (transform.localScale.x < 1) {
+            transform.localScale += dScale;
+            transform.position += dDirection;
+
+            yield return null;
+        }
+    }
+
+    IEnumerator ZoomInAnimation(Level level, Vector3 direction)
+    {
+        Debug.Log("Zoom in animation played");
+        Vector3 dScale = Vector3.one / level.Size;
+        Vector3 dDirection = direction / level.Size / level.Size;
+
+        while (transform.localScale.x > 0) {
+            transform.localScale -= dScale;
+            transform.position += dDirection;
+
+            yield return null;
+        }
+
+        transform.localScale = Vector3.one;
+        SetBlockInLevel(level, direction);
+    }
+
+    bool breakMoving = false;
+    IEnumerator MoveAnimation(Vector3 direction)
+    {
+        Vector3 d = direction / level.Size;
+        while (direction.magnitude > 0) {
+            if (breakMoving) {
+                breakMoving = false;
+                break;
+            }
+            if (direction.magnitude < d.magnitude)
+                d = direction;
+            transform.position += d;
+            direction -= d;
+            yield return null;
+
+        }
     }
 }

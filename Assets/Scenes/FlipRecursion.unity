@@ -561,11 +561,11 @@ Transform:
   m_GameObject: {fileID: 249611618}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 0.11111112, y: 0.11111112, z: 0.11111112}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1416138557}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &249611622
 MonoBehaviour:
@@ -574,12 +574,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249611618}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d18d0ee8dd562fb40a806f7adea185ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInBlock: {fileID: 0}
+  onScreenBlock: {fileID: 1416138558}
+  isPlayingAnimation: 0
 --- !u!1 &333672845
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,7 +694,7 @@ GameObject:
   - component: {fileID: 793978653}
   - component: {fileID: 793978656}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: LargeQuad
   m_TagString: RenderBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -799,6 +800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   block: {fileID: 0}
+  LvBlock: {fileID: 0}
 --- !u!1001 &866107622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1705,7 +1707,7 @@ GameObject:
   - component: {fileID: 1416138559}
   - component: {fileID: 1416138558}
   m_Layer: 0
-  m_Name: Quad (1)
+  m_Name: Quad
   m_TagString: RenderBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1723,8 +1725,7 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: -1}
   m_LocalScale: {x: 9, y: 9, z: 9}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 249611621}
+  m_Children: []
   m_Father: {fileID: 333672846}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1416138558
@@ -1740,6 +1741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   block: {fileID: 7325361630045640637}
+  LvBlock: {fileID: 0}
 --- !u!64 &1416138559
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3110,6 +3112,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 249611621}
   - {fileID: 1874399859}
   - {fileID: 1973696047}
   - {fileID: 1109023735}

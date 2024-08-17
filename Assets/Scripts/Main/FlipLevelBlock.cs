@@ -6,7 +6,7 @@ public class FlipLevelBlock : LevelBlock
 {
     protected override void MoveBlock(Vector3 direction)
     {
-        transform.position += direction;
+        StartCoroutine(MoveAnimation(direction));
         direction.x = -direction.x;
         onMoveBlock?.Invoke(this, direction);
     }

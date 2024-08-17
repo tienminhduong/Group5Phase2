@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class RenderBlock : MonoBehaviour
 {
-    [SerializeField] LevelBlock block;
+    public LevelBlock block;
 
-    //[SerializeField] RenderBlock largerBlock, smallerBlock;
+    public MeshRenderer meshRenderer { private set; get; }
+
+    private void Start()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+    }
+
     private void OnEnable()
     {
         Block.onMoveBlock += MoveRenderBlock;
@@ -18,16 +24,7 @@ public class RenderBlock : MonoBehaviour
 
     void MoveRenderBlock(Block movingBlock, Vector3 distance)
     {
-        if (movingBlock != block) return;
-        //transform.localPosition += distance * transform.localScale.x;
+        if (movingBlock != block || name == "LargeQuad") return;
         transform.position += distance * 9;
     }
-
-    //public void MoveBackToCamera(Vector3 direction)
-    //{
-    //    Transform largest = transform;
-    //    while (largest.parent.CompareTag("RenderBlock"))
-    //        largest = transform.parent;
-    //    largest.position += direction;
-    //}
 }

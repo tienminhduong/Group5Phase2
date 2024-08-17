@@ -9,13 +9,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
-            playerBlock.MoveTo(Vector3.up);
-        else if (Input.GetKeyDown(KeyCode.S))
-            playerBlock.MoveTo(Vector3.down);
-        else if (Input.GetKeyDown(KeyCode.D))
-            playerBlock.MoveTo(Vector3.right);
-        else if (Input.GetKeyDown(KeyCode.A))
-            playerBlock.MoveTo(Vector3.left);
+        if (!playerBlock.IsMoving) {
+            if (Input.GetKeyDown(KeyCode.W))
+                playerBlock.MoveTo(Vector3.up);
+            else if (Input.GetKeyDown(KeyCode.S))
+                playerBlock.MoveTo(Vector3.down);
+            else if (Input.GetKeyDown(KeyCode.D))
+                playerBlock.MoveTo(Vector3.right);
+            else if (Input.GetKeyDown(KeyCode.A))
+                playerBlock.MoveTo(Vector3.left);
+        }
     }
 }

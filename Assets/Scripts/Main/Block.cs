@@ -7,6 +7,8 @@ public class Block : MonoBehaviour
 {
     public Level level;
     public static Action<Block, Vector3> onMoveBlock;
+    bool isMoving = false;
+    public bool IsMoving => isMoving;
 
     public bool MoveTo(Vector3 direction)
     {
@@ -89,6 +91,8 @@ public class Block : MonoBehaviour
         level = level.ReferenceBlock.level;
 
         StartCoroutine(ZoomOutAnimation(direction));
+        if (RecursionEffectManager.Instance && !RecursionEffectManager.Instance.IsPlayingAnimation)
+            StartCoroutine(RecursionEffectManager.Instance.ZoomOutEffect());
     }
 
     public bool MoveInLevel(Level level, Vector3 direction)
@@ -96,11 +100,15 @@ public class Block : MonoBehaviour
         RaycastHit2D check = CheckNextTo(level.EnterPosition(direction) - direction, direction);
         if (!check) {
             StartCoroutine(ZoomInAnimation(level, direction));
+            if (RecursionEffectManager.Instance && !RecursionEffectManager.Instance.IsPlayingAnimation)
+                StartCoroutine(RecursionEffectManager.Instance.ZoomInEffect());
             return true;
         }
         Block block = check.transform.GetComponent<Block>();
         if (block.MoveTo(direction)) {
             StartCoroutine(ZoomInAnimation(level, direction));
+            if (RecursionEffectManager.Instance && !RecursionEffectManager.Instance.IsPlayingAnimation)
+                StartCoroutine(RecursionEffectManager.Instance.ZoomInEffect());
             return true;
         }
         return false;
@@ -114,6 +122,7 @@ public class Block : MonoBehaviour
 
     IEnumerator ZoomOutAnimation(Vector3 direction)
     {
+        isMoving = true;
         Debug.Log("Zoom Animation played");
 
         Vector3 dScale = Vector3.one / level.Size;
@@ -128,10 +137,12 @@ public class Block : MonoBehaviour
 
             yield return null;
         }
+        isMoving = false;
     }
 
     IEnumerator ZoomInAnimation(Level level, Vector3 direction)
     {
+        isMoving = true;
         Debug.Log("Zoom in animation played");
         Vector3 dScale = Vector3.one / level.Size;
         Vector3 dDirection = direction / level.Size / level.Size;
@@ -145,11 +156,13 @@ public class Block : MonoBehaviour
 
         transform.localScale = Vector3.one;
         SetBlockInLevel(level, direction);
+        isMoving = false;
     }
 
     bool breakMoving = false;
-    IEnumerator MoveAnimation(Vector3 direction)
+    protected IEnumerator MoveAnimation(Vector3 direction)
     {
+        isMoving = true;
         Vector3 d = direction / level.Size;
         while (direction.magnitude > 0) {
             if (breakMoving) {
@@ -163,5 +176,6 @@ public class Block : MonoBehaviour
             yield return null;
 
         }
+        isMoving = false;
     }
 }

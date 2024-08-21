@@ -8,7 +8,7 @@ public class CameraScript : MonoBehaviour
     [SerializeField] RenderBlock onScreenBlock;
     private void Update()
     {
-        if (!RecursionEffectManager.Instance || !RecursionEffectManager.Instance.IsPlayingAnimation)
+        if (!RenderBlockManager.Instance || !RenderBlockManager.Instance.IsPlayingAnimation)
             transform.position = onScreenBlock.transform.position + Vector3.back * 10;
     }
 }

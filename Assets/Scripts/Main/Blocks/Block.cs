@@ -81,7 +81,8 @@ public class Block : MonoBehaviour
     virtual protected void MoveBlock(Vector3 direction)
     {
         StartCoroutine(MoveAnimation(direction));
-        onMoveBlock?.Invoke(this, direction);
+        //onMoveBlock?.Invoke(this, direction);
+        RenderBlockManager.Instance.MoveRenderBlock();
     }
 
     public void MoveOutLevel(Vector3 direction)
@@ -91,8 +92,8 @@ public class Block : MonoBehaviour
         level = level.ReferenceBlock.level;
 
         StartCoroutine(ZoomOutAnimation(direction));
-        if (RecursionEffectManager.Instance && !RecursionEffectManager.Instance.IsPlayingAnimation)
-            StartCoroutine(RecursionEffectManager.Instance.ZoomOutEffect());
+        //if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
+            //StartCoroutine(RenderBlockManager.Instance.ZoomOutEffect());
     }
 
     public bool MoveInLevel(Level level, Vector3 direction)
@@ -100,15 +101,15 @@ public class Block : MonoBehaviour
         RaycastHit2D check = CheckNextTo(level.EnterPosition(direction) - direction, direction);
         if (!check) {
             StartCoroutine(ZoomInAnimation(level, direction));
-            if (RecursionEffectManager.Instance && !RecursionEffectManager.Instance.IsPlayingAnimation)
-                StartCoroutine(RecursionEffectManager.Instance.ZoomInEffect());
+            //if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
+                //StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
             return true;
         }
         Block block = check.transform.GetComponent<Block>();
         if (block.MoveTo(direction)) {
             StartCoroutine(ZoomInAnimation(level, direction));
-            if (RecursionEffectManager.Instance && !RecursionEffectManager.Instance.IsPlayingAnimation)
-                StartCoroutine(RecursionEffectManager.Instance.ZoomInEffect());
+            //if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
+                //StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
             return true;
         }
         return false;

@@ -8,6 +8,6 @@ public class FlipLevelBlock : LevelBlock
     {
         StartCoroutine(MoveAnimation(direction));
         direction.x = -direction.x;
-        //onMoveBlock?.Invoke(this, direction);
+        onMoveBlock?.Invoke(this, direction);
     }
 }

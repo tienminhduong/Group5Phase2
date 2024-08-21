@@ -81,6 +81,8 @@ public class Block : MonoBehaviour
     virtual protected void MoveBlock(Vector3 direction)
     {
         StartCoroutine(MoveAnimation(direction));
+        if (!RenderBlockManager.Instance)
+            onMoveBlock?.Invoke(this, direction);
     }
 
     public void MoveOutLevel(Vector3 direction)
@@ -90,8 +92,7 @@ public class Block : MonoBehaviour
         level = level.ReferenceBlock.level;
 
         StartCoroutine(ZoomOutAnimation(direction));
-        if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
-            StartCoroutine(RenderBlockManager.Instance.ZoomOutEffect());
+        
     }
 
     public bool MoveInLevel(Level level, Vector3 direction)
@@ -99,15 +100,11 @@ public class Block : MonoBehaviour
         RaycastHit2D check = CheckNextTo(level.EnterPosition(direction) - direction, direction);
         if (!check) {
             StartCoroutine(ZoomInAnimation(level, direction));
-            //if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
-                //StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
             return true;
         }
         Block block = check.transform.GetComponent<Block>();
         if (block.MoveTo(direction)) {
             StartCoroutine(ZoomInAnimation(level, direction));
-            //if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
-                //StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
             return true;
         }
         return false;
@@ -122,7 +119,10 @@ public class Block : MonoBehaviour
     IEnumerator ZoomOutAnimation(Vector3 direction)
     {
         isMoving = true;
-        Debug.Log("Zoom Animation played");
+
+        if (gameObject.CompareTag("Player") && RenderBlockManager.Instance
+            && !RenderBlockManager.Instance.IsPlayingAnimation)
+            StartCoroutine(RenderBlockManager.Instance.ZoomOutEffect());
 
         Vector3 dScale = Vector3.one / level.Size;
         Vector3 dDirection = direction / level.Size;
@@ -142,7 +142,11 @@ public class Block : MonoBehaviour
     IEnumerator ZoomInAnimation(Level level, Vector3 direction)
     {
         isMoving = true;
-        Debug.Log("Zoom in animation played");
+
+        if (gameObject.CompareTag("Player") && RenderBlockManager.Instance
+            && !RenderBlockManager.Instance.IsPlayingAnimation)
+            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
+
         Vector3 dScale = Vector3.one / level.Size;
         Vector3 dDirection = direction / level.Size / level.Size;
 
@@ -156,8 +160,7 @@ public class Block : MonoBehaviour
         transform.localScale = Vector3.one;
         SetBlockInLevel(level, direction);
 
-        if (gameObject.CompareTag("Player") && !RenderBlockManager.Instance.IsPlayingAnimation)
-            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
+        
         isMoving = false;
     }
 
@@ -179,6 +182,7 @@ public class Block : MonoBehaviour
 
         }
         isMoving = false;
-        RenderBlockManager.Instance.MoveRenderBlock();
+        if (RenderBlockManager.Instance)
+            RenderBlockManager.Instance.MoveRenderBlock();
     }
 }

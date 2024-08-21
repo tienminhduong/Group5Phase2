@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class RenderBlock : MonoBehaviour
 {
-    [SerializeField] int currentMaterialIndex;
     public LevelBlock block;
+    [SerializeField] bool canMove;
     public MeshRenderer meshRenderer { private set; get; }
-    public int CurrentMaterialIndex => currentMaterialIndex;
 
     private void Start()
     {
@@ -25,7 +24,7 @@ public class RenderBlock : MonoBehaviour
 
     void MoveRenderBlock(Block movingBlock, Vector3 distance)
     {
-        //if (movingBlock != block || !canMove) return;
+        if (movingBlock != block || !canMove) return;
         transform.position += distance * 9;
     }
 }

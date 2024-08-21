@@ -14,11 +14,8 @@ public class RenderBlockManager : MonoBehaviour
     }
     #endregion
 
-    //[SerializeField] RenderBlock largeQuad, quad;
     [SerializeField] List<RenderBlock> renderBlocks;
     [SerializeField] float zoomSpeed;
-    //[SerializeField] List<Material> materials;
-    //int activeMaterialIndex = 0;
     public bool IsPlayingAnimation { private set; get; }
 
     private void Start()
@@ -60,7 +57,6 @@ public class RenderBlockManager : MonoBehaviour
         Debug.Log("Minsize: " + minSize);
         float dSize = Camera.main.orthographicSize - minSize;
 
-        //Vector3 distance = largeQuad.block.transform.position - largeQuad.block.level.transform.position;
         Vector3 distance = renderBlocks[1].block.VectorToMapCenter * 9 / renderBlocks[2].block.ReferenceLevel.Size;
         Debug.Log("Distance: " + distance);
         distance.z = 0;

@@ -16,8 +16,9 @@ public class RenderBlockManager : MonoBehaviour
 
     //[SerializeField] RenderBlock largeQuad, quad;
     [SerializeField] List<RenderBlock> renderBlocks;
-    [SerializeField] List<Material> materials;
-    int activeMaterialIndex = 0;
+    [SerializeField] float zoomSpeed;
+    //[SerializeField] List<Material> materials;
+    //int activeMaterialIndex = 0;
     public bool IsPlayingAnimation { private set; get; }
 
     private void Start()
@@ -26,74 +27,74 @@ public class RenderBlockManager : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++) {
             renderBlocks.Add(transform.GetChild(i).GetComponent<RenderBlock>());
         }
+        if (transform.childCount != 3) {
+            Debug.LogError("Not enough number of render blocks!!!");
+        }
     }
 
-    //public IEnumerator ZoomOutEffect()
-    //{
-    //    IsPlayingAnimation = true;
-    //    float maxSize = largeQuad.transform.localScale.x / quad.transform.localScale.x * Camera.main.orthographicSize;
-    //    float dSize = maxSize - Camera.main.orthographicSize;
+    public IEnumerator ZoomOutEffect()
+    {
+        IsPlayingAnimation = true;
+        float maxSize = renderBlocks[1].transform.localScale.x / renderBlocks[2].transform.localScale.x * Camera.main.orthographicSize;
+        float dSize = maxSize - Camera.main.orthographicSize;
 
-    //    Vector3 distance = Camera.main.transform.position;
-    //    distance.z = 0;
+        Vector3 distance = renderBlocks[2].transform.position - renderBlocks[1].transform.position;
+        distance.z = 0;
 
-    //    while (Camera.main.orthographicSize < maxSize) {
-    //        Camera.main.orthographicSize += dSize * Time.fixedDeltaTime;
-    //        Camera.main.transform.position -= distance * Time.fixedDeltaTime;
-    //        yield return null;
-    //    }
+        while (Camera.main.orthographicSize < maxSize) {
+            Camera.main.orthographicSize += dSize / zoomSpeed;
+            Camera.main.transform.position -= distance / zoomSpeed;
+            yield return null;
+        }
 
-    //    SwapLevel();
-    //    Camera.main.orthographicSize = 5f;
-    //    IsPlayingAnimation = false;
-    //}
+        SwapLevel();
+        Camera.main.orthographicSize = 5f;
+        IsPlayingAnimation = false;
+    }
 
-    //public IEnumerator ZoomInEffect()
-    //{
-    //    IsPlayingAnimation = true;
-    //    float minSize = Camera.main.orthographicSize / quad.block.level.Size;
-    //    float dSize = Camera.main.orthographicSize - minSize;
+    public IEnumerator ZoomInEffect()
+    {
+        Debug.Log("Zoom in effect is called!");
+        IsPlayingAnimation = true;
+        float minSize = Camera.main.orthographicSize / renderBlocks[1].block.level.Size;
+        Debug.Log("Minsize: " + minSize);
+        float dSize = Camera.main.orthographicSize - minSize;
 
-    //    Vector3 distance = largeQuad.block.transform.position - largeQuad.block.level.transform.position;
-    //    distance.z = 0;
+        //Vector3 distance = largeQuad.block.transform.position - largeQuad.block.level.transform.position;
+        Vector3 distance = renderBlocks[1].block.VectorToMapCenter * 9 / renderBlocks[2].block.ReferenceLevel.Size;
+        Debug.Log("Distance: " + distance);
+        distance.z = 0;
 
-    //    while (Camera.main.orthographicSize > minSize) {
-    //        Camera.main.orthographicSize -= dSize * Time.fixedDeltaTime;
-    //        Camera.main.transform.position -= distance * Time.fixedDeltaTime;
-    //        yield return null;
-    //    }
+        while (Camera.main.orthographicSize > minSize) {
+            Camera.main.orthographicSize -= dSize / zoomSpeed;
+            Camera.main.transform.position += distance / zoomSpeed;
+            yield return null;
+        }
 
-    //    SwapLevel();
-    //    Camera.main.orthographicSize = 5f;
-    //    IsPlayingAnimation = false;
-    //}
+        SwapLevel();
+        Camera.main.orthographicSize = 5f;
+        IsPlayingAnimation = false;
+    }
 
-    //void SwapLevel()
-    //{
-    //    // Swap material
-    //    largeQuad.meshRenderer.material = materials[activeMaterialIndex];
+    void SwapLevel()
+    {
+        for (int i = 0; i < renderBlocks.Count; i++) {
+            renderBlocks[i].meshRenderer.material = renderBlocks[(i + 1) % renderBlocks.Count].meshRenderer.material;
+            renderBlocks[i].block = renderBlocks[(i + 1) % renderBlocks.Count].block;
+        }
 
-    //    activeMaterialIndex += 1;
-    //    activeMaterialIndex %= materials.Count;
+        for (int i = renderBlocks.Count - 2; i >= 0; i--) {
+            renderBlocks[i].transform.localScale = renderBlocks[i + 1].transform.localScale * renderBlocks[i].block.ReferenceLevel.Size;
+        }
 
-    //    quad.meshRenderer.material = materials[activeMaterialIndex];
-
-    //    // Swap block
-    //    LevelBlock lvBlock = largeQuad.block;
-    //    largeQuad.block = quad.block;
-    //    quad.block = lvBlock;
-
-    //    largeQuad.transform.localScale = (9 * largeQuad.block.ReferenceLevel.Size) * Vector3.one;
-
-    //    // Position
-    //    quad.transform.position = (quad.block.transform.position - quad.block.level.transform.position) * 9 + Vector3.back;
-    //}
+        MoveRenderBlock();
+    }
 
     public void MoveRenderBlock()
     {
         for (int i = 1; i < renderBlocks.Count; i++) {
             renderBlocks[i].transform.position = renderBlocks[i - 1].transform.position
-                + renderBlocks[i].block.VectorToMapCenter * transform.localScale.x;
+                + renderBlocks[i].block.VectorToMapCenter * renderBlocks[i].transform.localScale.x + Vector3.back * i;
         }
     }
 }

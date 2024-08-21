@@ -81,8 +81,6 @@ public class Block : MonoBehaviour
     virtual protected void MoveBlock(Vector3 direction)
     {
         StartCoroutine(MoveAnimation(direction));
-        //onMoveBlock?.Invoke(this, direction);
-        RenderBlockManager.Instance.MoveRenderBlock();
     }
 
     public void MoveOutLevel(Vector3 direction)
@@ -92,8 +90,8 @@ public class Block : MonoBehaviour
         level = level.ReferenceBlock.level;
 
         StartCoroutine(ZoomOutAnimation(direction));
-        //if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
-            //StartCoroutine(RenderBlockManager.Instance.ZoomOutEffect());
+        if (RenderBlockManager.Instance && !RenderBlockManager.Instance.IsPlayingAnimation)
+            StartCoroutine(RenderBlockManager.Instance.ZoomOutEffect());
     }
 
     public bool MoveInLevel(Level level, Vector3 direction)
@@ -157,6 +155,9 @@ public class Block : MonoBehaviour
 
         transform.localScale = Vector3.one;
         SetBlockInLevel(level, direction);
+
+        if (gameObject.CompareTag("Player") && !RenderBlockManager.Instance.IsPlayingAnimation)
+            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
         isMoving = false;
     }
 
@@ -178,5 +179,6 @@ public class Block : MonoBehaviour
 
         }
         isMoving = false;
+        RenderBlockManager.Instance.MoveRenderBlock();
     }
 }

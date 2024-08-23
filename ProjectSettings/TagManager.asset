@@ -8,6 +8,7 @@ TagManager:
   - LevelBarrier
   - RenderBlock
   - LevelBlock
+  - GoalBox
   layers:
   - Default
   - TransparentFX

@@ -7,11 +7,9 @@ public class MapBlock : MonoBehaviour
     [SerializeField] int mapID;
     public int MapID => mapID;
 
-    bool canGetIn = true;
-    public bool CanGetIn => canGetIn;
+    [SerializeField] bool canGetIn = false;
+    public bool CanGetIn { get => canGetIn; set { canGetIn = value; } }
 
-    [SerializeField] bool isReady = false;
-    public bool IsReady => isReady;
 
     [SerializeField] Sprite finishedSprite;
     [SerializeField] SpriteRenderer spriteRenderer;
@@ -22,5 +20,11 @@ public class MapBlock : MonoBehaviour
         spriteRenderer.sprite = finishedSprite;
         canGetIn = false;
     }    
+
+    public void Prepare()
+    {
+        // is ready
+        // spriteRenderer.sprite.
+    }
     
 }

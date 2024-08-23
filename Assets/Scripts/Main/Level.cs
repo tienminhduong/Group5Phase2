@@ -5,8 +5,8 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     [SerializeField] int size;
-    [SerializeField] Block referenceBlock;
-    public Block ReferenceBlock => referenceBlock;
+    [SerializeField] LevelBlock referenceBlock;
+    public LevelBlock ReferenceBlock => referenceBlock;
     public int Size => size;
 
     [SerializeField] bool enterLeft, enterRight, enterTop, enterBottom;

@@ -137,6 +137,8 @@ public class Block : MonoBehaviour
             yield return null;
         }
         isMoving = false;
+        if (gameObject.CompareTag("LevelBlock"))
+            RenderBlockManager.Instance?.SwapLevel();
     }
 
     IEnumerator ZoomInAnimation(Level level, Vector3 direction)
@@ -145,7 +147,7 @@ public class Block : MonoBehaviour
 
         if (gameObject.CompareTag("Player") && RenderBlockManager.Instance
             && !RenderBlockManager.Instance.IsPlayingAnimation)
-            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
+            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect(level.ReferenceBlock));
 
         Vector3 dScale = Vector3.one / level.Size;
         Vector3 dDirection = direction / level.Size / level.Size;
@@ -160,8 +162,9 @@ public class Block : MonoBehaviour
         transform.localScale = Vector3.one;
         SetBlockInLevel(level, direction);
 
-        
         isMoving = false;
+        if (gameObject.CompareTag("LevelBlock"))
+            RenderBlockManager.Instance?.SwapLevel();
     }
 
     bool breakMoving = false;

@@ -14,8 +14,9 @@ public class RenderBlockManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] List<RenderBlock> renderBlocks;
+    List<RenderBlock> renderBlocks;
     [SerializeField] float zoomSpeed;
+    [SerializeField] Block player;
     public bool IsPlayingAnimation { private set; get; }
 
     private void Start()
@@ -34,13 +35,21 @@ public class RenderBlockManager : MonoBehaviour
         IsPlayingAnimation = true;
         float maxSize = renderBlocks[1].transform.localScale.x / renderBlocks[2].transform.localScale.x * Camera.main.orthographicSize;
         float dSize = maxSize - Camera.main.orthographicSize;
+        Vector3 oldPos = renderBlocks[2].transform.position;
 
         Vector3 distance = renderBlocks[2].transform.position - renderBlocks[1].transform.position;
         distance.z = 0;
 
         while (Camera.main.orthographicSize < maxSize) {
+
             Camera.main.orthographicSize += dSize / zoomSpeed;
             Camera.main.transform.position -= distance / zoomSpeed;
+
+            if (Mathf.Abs(Vector3.Distance(oldPos, renderBlocks[2].transform.position)) > 0.01f) {
+                Camera.main.transform.position += renderBlocks[2].transform.position - oldPos;
+                oldPos = renderBlocks[2].transform.position;
+            }
+
             yield return null;
         }
 
@@ -49,21 +58,28 @@ public class RenderBlockManager : MonoBehaviour
         IsPlayingAnimation = false;
     }
 
-    public IEnumerator ZoomInEffect()
+    public IEnumerator ZoomInEffect(LevelBlock inLevel)
     {
         Debug.Log("Zoom in effect is called!");
         IsPlayingAnimation = true;
-        float minSize = Camera.main.orthographicSize / renderBlocks[1].block.level.Size;
+        float minSize = Camera.main.orthographicSize / inLevel.level.Size;
         Debug.Log("Minsize: " + minSize);
         float dSize = Camera.main.orthographicSize - minSize;
 
-        Vector3 distance = renderBlocks[1].block.VectorToMapCenter * 9 / renderBlocks[2].block.ReferenceLevel.Size;
+        Vector3 distance = inLevel.VectorToMapCenter * 9 / renderBlocks[2].block.ReferenceLevel.Size;
         Debug.Log("Distance: " + distance);
         distance.z = 0;
+        Vector3 oldPos = renderBlocks[2].transform.position;
 
         while (Camera.main.orthographicSize > minSize) {
             Camera.main.orthographicSize -= dSize / zoomSpeed;
             Camera.main.transform.position += distance / zoomSpeed;
+
+            if (Mathf.Abs(Vector3.Distance(oldPos, renderBlocks[2].transform.position)) > 0.01f) {
+                Camera.main.transform.position += renderBlocks[2].transform.position - oldPos;
+                oldPos = renderBlocks[2].transform.position;
+            }
+
             yield return null;
         }
 
@@ -72,11 +88,14 @@ public class RenderBlockManager : MonoBehaviour
         IsPlayingAnimation = false;
     }
 
-    void SwapLevel()
+    public void SwapLevel()
     {
-        for (int i = 0; i < renderBlocks.Count; i++) {
-            renderBlocks[i].meshRenderer.material = renderBlocks[(i + 1) % renderBlocks.Count].meshRenderer.material;
-            renderBlocks[i].block = renderBlocks[(i + 1) % renderBlocks.Count].block;
+        // Reload material
+        LevelBlock currentInLevel = player.level.ReferenceBlock;
+        for (int i = 2; i >= 0; i--) {
+            renderBlocks[i].meshRenderer.material = currentInLevel.material;
+            renderBlocks[i].block = currentInLevel;
+            currentInLevel = currentInLevel.level.ReferenceBlock;
         }
 
         for (int i = renderBlocks.Count - 2; i >= 0; i--) {

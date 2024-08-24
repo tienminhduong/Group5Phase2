@@ -16,7 +16,8 @@ public class Block : MonoBehaviour
         if (CheckAndMove(check, direction))
             return true;
 
-
+        if (gameObject.CompareTag("Player"))
+            return false;
         RaycastHit2D checkOpposite = CheckNextTo(transform.position, -direction);
         if (!checkOpposite || !checkOpposite.transform.CompareTag("LevelBlock")) return false;
         LevelBlock oppositeDirectionBlock = checkOpposite.transform.GetComponent<LevelBlock>();
@@ -35,7 +36,7 @@ public class Block : MonoBehaviour
     bool CheckAndMove(RaycastHit2D raycastHit2D, Vector3 direction)
     {
         // If there are no objects, move the current block
-        if (!raycastHit2D) {
+        if (!raycastHit2D || raycastHit2D.collider.CompareTag("GoalBox")) {
             MoveBlock(direction);
             return true;
         }
@@ -92,7 +93,6 @@ public class Block : MonoBehaviour
         level = level.ReferenceBlock.level;
 
         StartCoroutine(ZoomOutAnimation(direction));
-        
     }
 
     public bool MoveInLevel(Level level, Vector3 direction)
@@ -137,6 +137,8 @@ public class Block : MonoBehaviour
             yield return null;
         }
         isMoving = false;
+        if (gameObject.CompareTag("LevelBlock"))
+            RenderBlockManager.Instance?.SwapLevel();
     }
 
     IEnumerator ZoomInAnimation(Level level, Vector3 direction)
@@ -145,7 +147,7 @@ public class Block : MonoBehaviour
 
         if (gameObject.CompareTag("Player") && RenderBlockManager.Instance
             && !RenderBlockManager.Instance.IsPlayingAnimation)
-            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect());
+            StartCoroutine(RenderBlockManager.Instance.ZoomInEffect(level.ReferenceBlock));
 
         Vector3 dScale = Vector3.one / level.Size;
         Vector3 dDirection = direction / level.Size / level.Size;
@@ -160,8 +162,9 @@ public class Block : MonoBehaviour
         transform.localScale = Vector3.one;
         SetBlockInLevel(level, direction);
 
-        
         isMoving = false;
+        if (gameObject.CompareTag("LevelBlock"))
+            RenderBlockManager.Instance?.SwapLevel();
     }
 
     bool breakMoving = false;

@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
-    public MapBlock[] map = new MapBlock[6];
-    [SerializeField] int currentMap = 0;
-    [SerializeField] bool tempCompleted = false;
+    [SerializeField] MapBlock[] map = new MapBlock[7];
+    [SerializeField] int currentMap;
+
 
     private void Start()
     {
-        map[0].CanGetIn = true;
+        //PlayerPrefs.DeleteAll();
+        if (PlayerPrefs.HasKey("completedMap"))
+        {
+            int cMap = PlayerPrefs.GetInt("completedMap");
+            Debug.Log(cMap);
+            map[cMap].CanGetIn = false;
+            currentMap = cMap + 1;
+        }
+        else
+        {
+            currentMap = 0;
+        }
+        Prepare();
     }
-
     private void Update()
     {
-        if (tempCompleted)
-        {
-            PrepareTheNext();
-            tempCompleted = false;
-        }
+        
     }
 
-    public void PrepareTheNext()
+    public void Prepare()
     {
-        map[currentMap].CanGetIn = false;
-        map[currentMap].ChangeSprite();
-        map[currentMap + 1].CanGetIn = true;
+        map[currentMap].CanGetIn = true;
     }
 }

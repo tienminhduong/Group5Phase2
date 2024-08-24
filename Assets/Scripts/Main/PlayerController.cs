@@ -22,6 +22,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // for test
+            PlayerPrefs.SetInt("completedMap", PlayerPrefs.GetInt("completedMap") + 1);
+
             SceneManager.LoadScene(0);
+        }    
+            
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,7 @@ public class StartPlayer : MonoBehaviour
 
     private void Start()
     {
+        //PlayerPrefs.DeleteAll();
         if (PlayerPrefs.HasKey("xPos"))
         {
             float x = PlayerPrefs.GetFloat("xPos");
@@ -20,13 +22,13 @@ public class StartPlayer : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            Move(Vector3.up /2);
+            Move(Vector3.up);
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-            Move(Vector3.down /2);
+            Move(Vector3.down);
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            Move(Vector3.right / 2);
+            Move(Vector3.right);
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-            Move(Vector3.left /2);
+            Move(Vector3.left);
     }
 
     private void Move(Vector3 direct)
@@ -37,30 +39,32 @@ public class StartPlayer : MonoBehaviour
 
         if (hit)
         {
-            Debug.Log("Hit something : " + hit.collider);
+            Debug.Log("Hit something : " + hit.collider); 
             if (hit.collider.CompareTag("MapBlock") && hit.collider.GetComponent<MapBlock>().CanGetIn)
             {
-                //StartCoroutine(PlayZoomAnim(direct));
-                //transform.position += direct;
-                PlayerPrefs.SetFloat("xPos", transform.position.x + direct.x * 3);
-                PlayerPrefs.SetFloat("yPos", transform.position.y + direct.y * 3);
-  
-                SceneManager.LoadScene(hit.collider.GetComponent<MapBlock>().MapID);
+                transform.position += direct/2;
             }    
         }
         else
         {
             Debug.Log("Hit nothing");
-            transform.position += direct;
+            transform.position += direct/2;
         }
     }
 
-    public IEnumerator PlayZoomAnim(Vector3 direct)
+
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        yield return new WaitForSeconds(1f);
-        animator.SetBool("Zoom", true);
-        
-        yield return new WaitForSeconds(10f);
+        if (Mathf.Approximately(transform.position.x, collision.transform.position.x) &&
+            Mathf.Approximately(transform.position.y, collision.transform.position.y))
+        {
+            if (transform.position.x != PlayerPrefs.GetFloat("xPos") || transform.position.y != PlayerPrefs.GetFloat("yPos"))
+            {
+                SceneManager.LoadScene(collision.GetComponent<MapBlock>().MapID);
+                PlayerPrefs.SetFloat("xPos", transform.position.x);
+                PlayerPrefs.SetFloat("yPos", transform.position.y);
+            }
+        }
     }
 
 }

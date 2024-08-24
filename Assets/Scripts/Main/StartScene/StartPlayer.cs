@@ -15,7 +15,7 @@ public class StartPlayer : MonoBehaviour
         if (PlayerPrefs.HasKey("xPos"))
         {
             float x = PlayerPrefs.GetFloat("xPos");
-            float y = PlayerPrefs.GetFloat("yPos");
+            float y = PlayerPrefs.GetFloat("yPos") + 1;
             transform.position = new Vector3(x, y, 0);
         }
     }
@@ -58,12 +58,11 @@ public class StartPlayer : MonoBehaviour
         if (Mathf.Approximately(transform.position.x, collision.transform.position.x) &&
             Mathf.Approximately(transform.position.y, collision.transform.position.y))
         {
-            if (transform.position.x != PlayerPrefs.GetFloat("xPos") || transform.position.y != PlayerPrefs.GetFloat("yPos"))
-            {
+            
                 SceneManager.LoadScene(collision.GetComponent<MapBlock>().MapID);
                 PlayerPrefs.SetFloat("xPos", transform.position.x);
                 PlayerPrefs.SetFloat("yPos", transform.position.y);
-            }
+            
         }
     }
 

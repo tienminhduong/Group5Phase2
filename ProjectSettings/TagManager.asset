@@ -9,6 +9,7 @@ TagManager:
   - RenderBlock
   - LevelBlock
   - GoalBox
+  - MapBlock
   layers:
   - Default
   - TransparentFX

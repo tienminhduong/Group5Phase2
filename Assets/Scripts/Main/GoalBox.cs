@@ -14,6 +14,8 @@ public class GoalBox : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (!GameManager.Instance)
+            return;
         if (!needPlayer || (needPlayer && collision.gameObject.CompareTag("Player")))
             GameManager.Instance.ExitCheckPoint();
     }

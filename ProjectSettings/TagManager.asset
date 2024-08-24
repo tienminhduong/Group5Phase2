@@ -8,6 +8,7 @@ TagManager:
   - LevelBarrier
   - RenderBlock
   - LevelBlock
+  - MapBlock
   layers:
   - Default
   - TransparentFX

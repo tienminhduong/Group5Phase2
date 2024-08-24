@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
+    [SerializeField] int size;
     [SerializeField] Block referenceBlock;
     public Block ReferenceBlock => referenceBlock;
+    public int Size => size;
 
     [SerializeField] bool enterLeft, enterRight, enterTop, enterBottom;
     virtual public bool CanEnterFrom(Vector3 direction)
@@ -27,6 +29,6 @@ public class Level : MonoBehaviour
     }
     virtual public Vector3 EnterPosition(Vector3 direction)
     {
-        return transform.position - direction * 4f;
+        return transform.position - direction * (size / 2);
     }
 }
